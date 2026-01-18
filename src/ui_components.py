@@ -13,7 +13,7 @@ def render_metric_card(title, value, change, change_pct):
         
     st.metric(
         label=title,
-        value=f"{value:,.2f}",
+        value=f"₹{value:,.2f}" if "USD/INR" not in title else f"{value:,.2f}",
         delta=f"{change:,.2f} ({change_pct:.2f}%)",
         delta_color=delta_color
     )

@@ -57,15 +57,15 @@ def main():
     
     with col1:
         data = prices.get("Gold", {})
-        render_metric_card("Gold", data.get("price", 0), data.get("change_abs", 0), data.get("change_pct", 0))
+        render_metric_card("Gold (₹)", data.get("price_inr", 0), data.get("change_inr", 0), data.get("change_pct", 0))
     
     with col2:
         data = prices.get("Silver", {})
-        render_metric_card("Silver", data.get("price", 0), data.get("change_abs", 0), data.get("change_pct", 0))
+        render_metric_card("Silver (₹)", data.get("price_inr", 0), data.get("change_inr", 0), data.get("change_pct", 0))
 
     with col3:
         data = prices.get("Oil", {})
-        render_metric_card("Crude Oil", data.get("price", 0), data.get("change_abs", 0), data.get("change_pct", 0))
+        render_metric_card("Crude Oil (₹)", data.get("price_inr", 0), data.get("change_inr", 0), data.get("change_pct", 0))
 
     with col4:
         data = prices.get("USD/INR", {})

@@ -46,6 +46,18 @@ def get_current_prices():
             print(f"Error fetching {name}: {e}")
             data[name] = {"price": 0.0, "change_abs": 0.0, "change_pct": 0.0}
     
+    # Calculate INR prices
+    usd_inr = data.get("USD/INR", {}).get("price", 80.0) # Fallback to 80 if fails
+    
+    for name in ["Gold", "Oil", "Silver"]:
+        if name in data:
+            usd_price = data[name]["price"]
+            usd_change = data[name]["change_abs"]
+            
+            # Conversion
+            data[name]["price_inr"] = usd_price * usd_inr
+            data[name]["change_inr"] = usd_change * usd_inr
+            
     return data
 
 def get_historical_data(ticker_symbol, period="1mo", interval="1d"):
