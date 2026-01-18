@@ -18,7 +18,7 @@ def render_metric_card(title, value, change, change_pct):
         delta_color=delta_color
     )
 
-def plot_price_chart(df, ticker_name):
+def plot_price_chart(df, ticker_name, y_col='Close', currency_symbol=''):
     """
     Plots an interactive line chart using Plotly.
     """
@@ -29,16 +29,16 @@ def plot_price_chart(df, ticker_name):
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=df.index,
-        y=df['Close'],
+        y=df[y_col],
         mode='lines',
         name=ticker_name,
         line=dict(width=2)
     ))
     
     fig.update_layout(
-        title=f"{ticker_name} Price Trend",
+        title=f"{ticker_name} Price Trend ({currency_symbol})",
         xaxis_title="Date",
-        yaxis_title="Price",
+        yaxis_title=f"Price ({currency_symbol})",
         template="plotly_dark",
         margin=dict(l=0, r=0, t=30, b=0),
         height=350

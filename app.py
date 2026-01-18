@@ -84,7 +84,32 @@ def main():
         with st.spinner(f"Loading chart for {selected_ticker}..."):
             ticker_symbol = TICKERS[selected_ticker]
             hist_df = get_historical_data(ticker_symbol, period=period)
-            plot_price_chart(hist_df, selected_ticker)
+            
+            # Logic for INR conversion on the chart
+            y_col = 'Close'
+            currency_symbol = '$'
+            
+            if selected_ticker != "USD/INR" and not hist_df.empty:
+                # Fetch USD/INR history for the same period
+                fx_df = get_historical_data("INR=X", period=period)
+                
+                # Align the DataFrames on Index (Date)
+                # We use an inner join to ensure we only have points where we have both data
+                if not fx_df.empty:
+                    combined = hist_df[['Close']].join(fx_df[['Close']], lsuffix='_Asset', rsuffix='_FX')
+                    
+                    # Calculate INR Price
+                    combined['Close_INR'] = combined['Close_Asset'] * combined['Close_FX']
+                    combined = combined.dropna()
+                    
+                    # Update parameters for plotting
+                    hist_df = combined
+                    y_col = 'Close_INR'
+                    currency_symbol = '₹'
+            elif selected_ticker == "USD/INR":
+                 currency_symbol = '₹'
+
+            plot_price_chart(hist_df, selected_ticker, y_col=y_col, currency_symbol=currency_symbol)
 
     with col_sentiment:
         st.subheader("Geopolitical Pulse")
