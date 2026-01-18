@@ -94,12 +94,17 @@ def main():
                 fx_df = get_historical_data("INR=X", period=period)
                 
                 # Align the DataFrames on Index (Date)
+                # Ensure we strip timezone information for alignment
+                hist_df.index = hist_df.index.tz_localize(None).normalize()
+                fx_df.index = fx_df.index.tz_localize(None).normalize()
+
                 # We use an inner join to ensure we only have points where we have both data
                 if not fx_df.empty:
                     combined = hist_df[['Close']].join(fx_df[['Close']], lsuffix='_Asset', rsuffix='_FX')
                     
                     # Calculate INR Price
                     combined['Close_INR'] = combined['Close_Asset'] * combined['Close_FX']
+                    # Dropna is important because holidays map differ
                     combined = combined.dropna()
                     
                     # Update parameters for plotting
